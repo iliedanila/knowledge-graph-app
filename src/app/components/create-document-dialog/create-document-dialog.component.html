@@ -1,6 +1,29 @@
 <div class="dialog-container">
     <h2>Create New Document</h2>
-    <p>Document creation dialog content will go here...</p>
 
-    <button (click)="onCloseButtonClicked()">Close</button>
+    <div class="form-group">
+        <label for="documentTitle">Title:</label>
+        <input
+            type="text"
+            id="documentTitle"
+            name="documentTitle"
+            [(ngModel)]="documentTitle"
+            class="form-control"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="documentContent">Content:</label>
+        <textarea
+            id="documentContent"
+            name="documentContent"
+            [(ngModel)]="documentContent"
+            class="form-control"
+        ></textarea>
+    </div>
+
+    <div class="dialog-buttons">
+        <button (click)="onCreateDocument()">Create</button>
+        <button (click)="onCloseButtonClicked()">Close</button>
+    </div>
 </div>

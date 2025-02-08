@@ -4,9 +4,38 @@
     background-color: #f9f9f9;
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    position: absolute; /* Basic positioning to make it stand out */
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 1000; /* Ensure it's on top of other content */
+    z-index: 1000;
+    min-width: 300px; /* Added min-width for better form layout */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input.form-control,
+.form-group textarea.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.dialog-buttons {
+    text-align: right; /* Align buttons to the right */
+    margin-top: 20px;
+}
+
+.dialog-buttons button {
+    margin-left: 10px;
 }
