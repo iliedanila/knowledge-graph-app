@@ -65,4 +65,11 @@ export class DocumentListComponent implements OnInit {
             this.isCreateDialogVisible
         );
     }
+
+    editDocument(document: Document) {
+        console.log(
+            "DocumentListComponent: editDocument() button clicked for document:",
+            document
+        );
+    }
 }

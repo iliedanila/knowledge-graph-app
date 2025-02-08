@@ -6,6 +6,7 @@
     <ul *ngIf="documents$ | async as documents; else loading">
         <li *ngFor="let document of documents; trackBy: trackByDocumentId">
             {{ document.title }} (ID: {{ document.id }})
+            <button (click)="editDocument(document)">Edit</button>
         </li>
     </ul>
     <ng-template #loading>

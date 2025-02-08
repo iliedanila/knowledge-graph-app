@@ -1,17 +1,12 @@
 <div>
-    <h1>Welcome to {{ title }}!</h1>
-
     <div *ngIf="authState$ | async as user; else notLoggedIn">
-        <p>Welcome, User!</p>
-        <pre>User Info: {{ user | json }}</pre>
+        <p>Welcome, {{ user?.displayName || user?.email }}!</p>
         <button (click)="signOutWithGoogle()">Sign Out</button>
     </div>
-
     <ng-template #notLoggedIn>
-        <button (click)="signInWithGoogle()">Sign in with Google</button>
         <p>Not logged in.</p>
+        <button (click)="signInWithGoogle()">Sign in with Google</button>
     </ng-template>
-
     <app-document-list></app-document-list>
 </div>
 <router-outlet></router-outlet>
