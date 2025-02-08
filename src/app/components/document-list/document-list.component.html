@@ -11,4 +11,9 @@
     <ng-template #loading>
         <p>Loading documents...</p>
     </ng-template>
+
+    <app-create-document-dialog
+        *ngIf="isCreateDialogVisible"
+        (dialogClosed)="onDialogClose()"
+    ></app-create-document-dialog>
 </div>

@@ -10,11 +10,12 @@ import {
 import { DocumentService } from "../../services/document.service";
 import { Observable } from "rxjs";
 import { Document } from "../../models/document.model";
+import { CreateDocumentDialogComponent } from "../create-document-dialog/create-document-dialog.component";
 
 @Component({
     selector: "app-document-list",
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, CreateDocumentDialogComponent],
     templateUrl: "./document-list.component.html",
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,6 +24,7 @@ export class DocumentListComponent implements OnInit {
     private documentService = inject(DocumentService);
     private injector = inject(Injector);
     documents$!: Observable<Document[]>;
+    isCreateDialogVisible = false;
 
     constructor() {
         console.log("DocumentListComponent: Constructor called");
@@ -46,5 +48,21 @@ export class DocumentListComponent implements OnInit {
 
     createDocument() {
         console.log("DocumentListComponent: createDocument() button clicked!");
+        this.isCreateDialogVisible = true; // <-- Set isCreateDialogVisible to true when button is clicked
+        console.log(
+            "DocumentListComponent: isCreateDialogVisible set to:",
+            this.isCreateDialogVisible
+        );
+    }
+
+    onDialogClose() {
+        console.log(
+            "DocumentListComponent: dialogClosed event received, closing dialog"
+        );
+        this.isCreateDialogVisible = false;
+        console.log(
+            "DocumentListComponent: isCreateDialogVisible set to:",
+            this.isCreateDialogVisible
+        );
     }
 }
