@@ -5,7 +5,10 @@ import {
     addDoc,
     collection,
     collectionData,
+    doc,
     Firestore,
+    setDoc,
+    updateDoc,
 } from "@angular/fire/firestore";
 
 @Injectable({
@@ -26,25 +29,47 @@ export class DocumentService {
         }) as Observable<Document[]>;
     }
 
-    async createDocument(title: string, content: string): Promise<any> {
-        console.log(
-            "DocumentService: createDocument() called (Firestore Data)"
-        );
+    async createDocument(title: string, content: string) {
+        const documentsCollection = collection(this.firestore, "documents");
+        const docRef = doc(documentsCollection); // Let Firestore auto-generate ID
+        const document: Document = {
+            id: docRef.id, // Get the auto-generated ID
+            title: title,
+            content: content,
+            createdAt: new Date(), // Add createdAt timestamp
+        };
         try {
-            const documentsCollection = collection(this.firestore, "documents");
-            const newDocumentRef = await addDoc(documentsCollection, {
-                // Use addDoc to add a new document
-                title: title,
-                content: content,
-                createdAt: new Date(), // Add timestamp
-            });
+            await setDoc(docRef, document);
             console.log(
                 "DocumentService: Document created successfully with ID:",
-                newDocumentRef.id
+                document.id
             );
-            return newDocumentRef;
+            return document.id; // Return the document ID
         } catch (error) {
             console.error("DocumentService: Error creating document:", error);
+            throw error; // Re-throw the error for component to handle
+        }
+    }
+
+    async updateDocument(
+        documentId: string,
+        title: string,
+        content: string
+    ): Promise<void> {
+        try {
+            const documentRef = doc(this.firestore, "documents", documentId);
+            await updateDoc(documentRef, {
+                title: title,
+                content: content,
+            });
+            console.log(
+                `DocumentService: Document with ID ${documentId} updated successfully`
+            );
+        } catch (error) {
+            console.error(
+                `DocumentService: Error updating document with ID ${documentId}:`,
+                error
+            );
             throw error;
         }
     }

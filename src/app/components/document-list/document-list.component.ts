@@ -57,7 +57,7 @@ export class DocumentListComponent implements OnInit {
             width: "400px",
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
+        dialogRef.afterClosed().subscribe((_result) => {
             console.log("The dialog was closed"); // You can add logic here to handle dialog close event if needed
         });
     }
@@ -67,5 +67,18 @@ export class DocumentListComponent implements OnInit {
             "DocumentListComponent: editDocument() button clicked for document:",
             document
         );
+
+        console.log(
+            "DocumentListComponent: Opening CreateDocumentDialog in EDIT mode using MatDialog for document:",
+            document
+        );
+        const dialogRef = this.dialog.open(CreateDocumentDialogComponent, {
+            width: "400px",
+            data: { documentData: document },
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log("The edit dialog was closed");
+        });
     }
 }

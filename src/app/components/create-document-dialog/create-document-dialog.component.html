@@ -1,4 +1,10 @@
-<h2 mat-dialog-title>Create New Document</h2>
+<h2 mat-dialog-title>
+    <ng-container
+        *ngIf="isEditMode; then editTitle; else createTitle"
+    ></ng-container>
+    <ng-template #createTitle>Create New Document</ng-template>
+    <ng-template #editTitle>Edit Document</ng-template>
+</h2>
 <mat-dialog-content class="mat-typography">
     <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>Title</mat-label>
@@ -21,7 +27,15 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-raised-button color="primary" (click)="onCreateDocument()">
-        Create
+    <button
+        mat-raised-button
+        color="primary"
+        (click)="isEditMode ? onSaveChangesDocument() : onCreateDocument()"
+    >
+        <ng-container
+            *ngIf="isEditMode; then saveChangesButton; else createButton"
+        ></ng-container>
+        <ng-template #createButton>Create</ng-template>
+        <ng-template #saveChangesButton>Save Changes</ng-template>
     </button>
 </mat-dialog-actions>
