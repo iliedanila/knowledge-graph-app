@@ -1,7 +1,16 @@
 <div>
     <h1>Welcome to {{ title }}!</h1>
-    <p>Firebase Authentication Status:</p>
-    <pre>{{ authState$ | async | json }}</pre>
+
+    <div *ngIf="authState$ | async as user; else notLoggedIn">
+        <p>Welcome, User!</p>
+        <pre>User Info: {{ user | json }}</pre>
+        <button (click)="signOutWithGoogle()">Sign Out</button>
+    </div>
+
+    <ng-template #notLoggedIn>
+        <button (click)="signInWithGoogle()">Sign in with Google</button>
+        <p>Not logged in.</p>
+    </ng-template>
 
     <app-document-list></app-document-list>
 </div>

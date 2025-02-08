@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { Observable, of } from "rxjs";
+import { Observable } from "rxjs";
 import { Document } from "../models/document.model";
 import { collection, collectionData, Firestore } from "@angular/fire/firestore";
 
