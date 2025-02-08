@@ -1,29 +1,27 @@
-<div class="dialog-container">
-    <h2>Create New Document</h2>
-
-    <div class="form-group">
-        <label for="documentTitle">Title:</label>
+<h2 mat-dialog-title>Create New Document</h2>
+<mat-dialog-content class="mat-typography">
+    <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Title</mat-label>
         <input
-            type="text"
-            id="documentTitle"
-            name="documentTitle"
+            matInput
+            placeholder="Enter document title"
             [(ngModel)]="documentTitle"
-            class="form-control"
         />
-    </div>
+    </mat-form-field>
 
-    <div class="form-group">
-        <label for="documentContent">Content:</label>
+    <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Content</mat-label>
         <textarea
-            id="documentContent"
-            name="documentContent"
+            matInput
+            placeholder="Enter document content"
             [(ngModel)]="documentContent"
-            class="form-control"
+            rows="5"
         ></textarea>
-    </div>
-
-    <div class="dialog-buttons">
-        <button (click)="onCreateDocument()">Create</button>
-        <button (click)="onCloseButtonClicked()">Close</button>
-    </div>
-</div>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" (click)="onCreateDocument()">
+        Create
+    </button>
+</mat-dialog-actions>

@@ -11,11 +11,13 @@ import { DocumentService } from "../../services/document.service";
 import { Observable } from "rxjs";
 import { Document } from "../../models/document.model";
 import { CreateDocumentDialogComponent } from "../create-document-dialog/create-document-dialog.component";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 
 @Component({
     selector: "app-document-list",
     standalone: true,
-    imports: [CommonModule, CreateDocumentDialogComponent],
+    imports: [CommonModule, MatButtonModule, MatDialogModule],
     templateUrl: "./document-list.component.html",
     styles: ``,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +26,7 @@ export class DocumentListComponent implements OnInit {
     private documentService = inject(DocumentService);
     private injector = inject(Injector);
     documents$!: Observable<Document[]>;
-    isCreateDialogVisible = false;
+    private dialog: MatDialog = inject(MatDialog);
 
     constructor() {
         console.log("DocumentListComponent: Constructor called");
@@ -48,22 +50,16 @@ export class DocumentListComponent implements OnInit {
 
     createDocument() {
         console.log("DocumentListComponent: createDocument() button clicked!");
-        this.isCreateDialogVisible = true; // <-- Set isCreateDialogVisible to true when button is clicked
         console.log(
-            "DocumentListComponent: isCreateDialogVisible set to:",
-            this.isCreateDialogVisible
+            "DocumentListComponent: Opening CreateDocumentDialog using MatDialog"
         );
-    }
+        const dialogRef = this.dialog.open(CreateDocumentDialogComponent, {
+            width: "400px",
+        });
 
-    onDialogClose() {
-        console.log(
-            "DocumentListComponent: dialogClosed event received, closing dialog"
-        );
-        this.isCreateDialogVisible = false;
-        console.log(
-            "DocumentListComponent: isCreateDialogVisible set to:",
-            this.isCreateDialogVisible
-        );
+        dialogRef.afterClosed().subscribe((result) => {
+            console.log("The dialog was closed"); // You can add logic here to handle dialog close event if needed
+        });
     }
 
     editDocument(document: Document) {

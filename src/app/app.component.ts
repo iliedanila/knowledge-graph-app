@@ -14,10 +14,16 @@ import {
     signOut,
 } from "@angular/fire/auth";
 import { CommonModule } from "@angular/common";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
     selector: "app-root",
-    imports: [RouterOutlet, DocumentListComponent, CommonModule],
+    imports: [
+        RouterOutlet,
+        DocumentListComponent,
+        CommonModule,
+        MatButtonModule,
+    ],
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.css",
 })

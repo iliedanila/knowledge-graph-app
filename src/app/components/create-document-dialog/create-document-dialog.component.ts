@@ -10,10 +10,21 @@ import {
 } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { DocumentService } from "../../services/document.service";
+import { MatButtonModule } from "@angular/material/button";
+import { MatDialogModule, MatDialogRef } from "@angular/material/dialog"; // Import MatDialogModule and MatDialogRef
+import { MatFormFieldModule } from "@angular/material/form-field"; // Import MatFormFieldModule
+import { MatInputModule } from "@angular/material/input"; // Import MatInputModule
 
 @Component({
     selector: "app-create-document-dialog",
-    imports: [FormsModule, CommonModule],
+    imports: [
+        FormsModule,
+        CommonModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+    ],
     templateUrl: "./create-document-dialog.component.html",
     styleUrls: ["./create-document-dialog.component.css"],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +33,7 @@ export class CreateDocumentDialogComponent {
     @Output() dialogClosed = new EventEmitter<void>();
     private injector = inject(Injector);
     private documentService = inject(DocumentService);
+    public dialogRef = inject(MatDialogRef<CreateDocumentDialogComponent>);
 
     documentTitle = "";
     documentContent = "";
@@ -51,7 +63,7 @@ export class CreateDocumentDialogComponent {
                     this.documentContent
                 );
                 console.log(
-                    "CreateDocumentDialogComponent: Document creation initiated successfully"
+                    "CreateDocumentDialogComponent: Document created successfully"
                 );
 
                 this.documentTitle = "";
@@ -60,12 +72,13 @@ export class CreateDocumentDialogComponent {
                     "CreateDocumentDialogComponent: Form fields cleared"
                 );
 
-                this.dialogClosed.emit(); // Close dialog after successful creation
+                this.dialogRef.close();
             } catch (error) {
                 console.error(
                     "CreateDocumentDialogComponent: Error creating document:",
                     error
                 );
+                // Error handling (improve later)
             }
         });
     }

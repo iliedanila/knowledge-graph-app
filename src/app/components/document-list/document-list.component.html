@@ -1,20 +1,19 @@
 <div>
     <h2>Knowledge Graph Documents</h2>
 
-    <button (click)="createDocument()">Create New Document</button>
+    <button mat-raised-button color="primary" (click)="createDocument()">
+        Create New Document
+    </button>
 
     <ul *ngIf="documents$ | async as documents; else loading">
         <li *ngFor="let document of documents; trackBy: trackByDocumentId">
             {{ document.title }} (ID: {{ document.id }})
-            <button (click)="editDocument(document)">Edit</button>
+            <button mat-button color="accent" (click)="editDocument(document)">
+                Edit
+            </button>
         </li>
     </ul>
     <ng-template #loading>
         <p>Loading documents...</p>
     </ng-template>
-
-    <app-create-document-dialog
-        *ngIf="isCreateDialogVisible"
-        (dialogClosed)="onDialogClose()"
-    ></app-create-document-dialog>
 </div>
