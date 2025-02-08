@@ -53,6 +53,13 @@ export class CreateDocumentDialogComponent {
                 console.log(
                     "CreateDocumentDialogComponent: Document creation initiated successfully"
                 );
+
+                this.documentTitle = "";
+                this.documentContent = "";
+                console.log(
+                    "CreateDocumentDialogComponent: Form fields cleared"
+                );
+
                 this.dialogClosed.emit(); // Close dialog after successful creation
             } catch (error) {
                 console.error(
