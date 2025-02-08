@@ -81,4 +81,34 @@ export class DocumentListComponent implements OnInit {
             console.log("The edit dialog was closed");
         });
     }
+
+    deleteDocument(document: Document) {
+        console.log(
+            "DocumentListComponent: deleteDocument() button clicked for document:",
+            document
+        );
+        const documentId = document.id;
+        if (documentId) {
+            console.log(
+                `DocumentListComponent: Calling documentService.deleteDocument() for document ID: ${documentId}`
+            );
+            runInInjectionContext(this.injector, async () => {
+                try {
+                    await this.documentService.deleteDocument(documentId);
+                    console.log(
+                        `DocumentListComponent: Document with ID ${documentId} deleted successfully`
+                    );
+                } catch (error) {
+                    console.error(
+                        `DocumentListComponent: Error deleting document with ID ${documentId}:`,
+                        error
+                    );
+                }
+            });
+        } else {
+            console.error(
+                "DocumentListComponent: Error: document.id is missing. Cannot delete document."
+            );
+        }
+    }
 }

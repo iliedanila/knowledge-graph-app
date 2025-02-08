@@ -5,6 +5,7 @@ import {
     addDoc,
     collection,
     collectionData,
+    deleteDoc,
     doc,
     Firestore,
     setDoc,
@@ -68,6 +69,22 @@ export class DocumentService {
         } catch (error) {
             console.error(
                 `DocumentService: Error updating document with ID ${documentId}:`,
+                error
+            );
+            throw error;
+        }
+    }
+
+    async deleteDocument(documentId: string): Promise<void> {
+        try {
+            const documentRef = doc(this.firestore, "documents", documentId);
+            await deleteDoc(documentRef);
+            console.log(
+                `DocumentService: Document with ID ${documentId} deleted successfully`
+            );
+        } catch (error) {
+            console.error(
+                `DocumentService: Error deleting document with ID ${documentId}:`,
                 error
             );
             throw error;
