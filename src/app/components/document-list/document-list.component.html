@@ -1,0 +1,14 @@
+<div>
+    <h2>Knowledge Graph Documents</h2>
+
+    <button (click)="createDocument()">Create New Document</button>
+
+    <ul *ngIf="documents$ | async as documents; else loading">
+        <li *ngFor="let document of documents; trackBy: trackByDocumentId">
+            {{ document.title }} (ID: {{ document.id }})
+        </li>
+    </ul>
+    <ng-template #loading>
+        <p>Loading documents...</p>
+    </ng-template>
+</div>
