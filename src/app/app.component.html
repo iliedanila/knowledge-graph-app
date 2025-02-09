@@ -1,15 +1,12 @@
 <div>
     <div *ngIf="authState$ | async as user; else notLoggedIn">
         <p>Welcome, {{ user?.displayName || user?.email }}!</p>
-        <button mat-raised-button color="accent" (click)="signOutWithGoogle()">
+        <button mat-raised-button color="accent" (click)="signOut()">
             Sign Out
         </button>
     </div>
     <ng-template #notLoggedIn>
         <p>Not logged in.</p>
-        <button mat-raised-button color="primary" (click)="signInWithGoogle()">
-            Sign in with Google
-        </button>
     </ng-template>
 </div>
 <router-outlet></router-outlet>

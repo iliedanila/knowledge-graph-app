@@ -1,0 +1,25 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make Welcome component take full viewport height */
+}
+
+mat-card {
+    width: 500px; /* Adjust card width as needed */
+    max-width: 90%; /* Responsive width for smaller screens */
+}
+
+mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* Make content stretch to card width */
+}
+
+app-login {
+    margin-bottom: 20px; /* Add space below embedded login form */
+}
+
+button {
+    margin: 0 5px; /* Add horizontal spacing between buttons */
+}

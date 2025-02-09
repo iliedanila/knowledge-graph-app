@@ -4,7 +4,7 @@ import {
     Injector,
     runInInjectionContext,
 } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Router, RouterOutlet } from "@angular/router";
 import {
     Auth,
     authState,
@@ -24,6 +24,7 @@ import { MatButtonModule } from "@angular/material/button";
 export class AppComponent {
     title = "knowledge-graph-app";
     auth: Auth = inject(Auth);
+    private router: Router = inject(Router);
     authState$ = authState(this.auth);
     private injector = inject(Injector);
 
@@ -31,32 +32,12 @@ export class AppComponent {
         console.log("AppComponent: Constructor called");
     }
 
-    async signInWithGoogle() {
-        console.log("AppComponent: signInWithGoogle() called");
-        runInInjectionContext(this.injector, async () => {
-            // Wrap signInWithPopup in runInInjectionContext
-            console.log(
-                "AppComponent: signInWithGoogle() - Inside runInInjectionContext"
-            );
-            try {
-                const provider = new GoogleAuthProvider();
-                await signInWithPopup(this.auth, provider);
-                console.log("AppComponent: Google Sign-in successful");
-            } catch (error) {
-                console.error("AppComponent: Google Sign-in error:", error);
-            }
-        });
-    }
-
-    async signOutWithGoogle() {
+    async signOut() {
         console.log("AppComponent: signOutWithGoogle() called");
         runInInjectionContext(this.injector, async () => {
-            // Wrap signOut in runInInjectionContext
-            console.log(
-                "AppComponent: signOutWithGoogle() - Inside runInInjectionContext"
-            );
             try {
                 await signOut(this.auth);
+                this.router.navigate(["/"]);
                 console.log("AppComponent: Sign-out successful");
             } catch (error) {
                 console.error("AppComponent: Sign-out error:", error);

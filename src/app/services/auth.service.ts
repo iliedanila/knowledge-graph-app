@@ -3,6 +3,8 @@ import {
     Auth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup,
 } from "@angular/fire/auth"; // Make sure these are imported
 import { Observable, from } from "rxjs";
 
@@ -20,6 +22,11 @@ export class AuthService {
             password
         );
         return from(signInWithEmailAndPassword(this.auth, email, password));
+    }
+
+    signInWithGoogle(): Observable<any> {
+        const provider = new GoogleAuthProvider();
+        return from(signInWithPopup(this.auth, provider));
     }
 
     registerUserWithEmailPassword(

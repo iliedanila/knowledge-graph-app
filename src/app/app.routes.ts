@@ -1,28 +1,28 @@
 import { Routes } from "@angular/router";
-import { DocumentListComponent } from "./components/document-list/document-list.component"; // Import DocumentListComponent
-import { LoginComponent } from "./components/login/login.component"; // Import LoginComponent
+import { DocumentListComponent } from "./components/document-list/document-list.component";
+import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
+import { WelcomeComponent } from "./components/welcome/welcome.component"; // Make sure WelcomeComponent is imported
 
 export const routes: Routes = [
     {
-        path: "documents",
-        component: DocumentListComponent,
+        path: "",
+        component: WelcomeComponent,
     },
     {
-        path: "register",
-        component: RegisterComponent,
+        path: "documents",
+        component: DocumentListComponent,
     },
     {
         path: "login",
         component: LoginComponent,
     },
     {
-        path: "",
-        redirectTo: "documents",
-        pathMatch: "full",
+        path: "register",
+        component: RegisterComponent,
     },
     {
         path: "**",
-        redirectTo: "documents",
+        redirectTo: "",
     },
 ];

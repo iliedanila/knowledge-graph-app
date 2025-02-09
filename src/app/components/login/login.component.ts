@@ -19,6 +19,7 @@ import {
 } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
 import { Router } from "@angular/router";
+import { Auth, GoogleAuthProvider, signInWithPopup } from "@angular/fire/auth";
 
 @Component({
     selector: "app-login",
@@ -48,6 +49,7 @@ export class LoginComponent implements OnInit {
         password: this.passwordFormControl,
     });
     private authService = inject(AuthService);
+    auth: Auth = inject(Auth);
     private router = inject(Router);
 
     constructor() {}
@@ -82,5 +84,28 @@ export class LoginComponent implements OnInit {
             );
             alert("Please fill in all required fields correctly.");
         }
+    }
+
+    async signInWithGoogle() {
+        console.log("AppComponent: signInWithGoogle() called");
+        runInInjectionContext(this.injector, async () => {
+            this.authService.signInWithGoogle().subscribe({
+                next: (user) => {
+                    console.log("Login successful!", user);
+                    this.router.navigate(["/documents"]);
+                },
+                error: (error) => {
+                    console.error("Login failed:", error);
+                    alert(
+                        "Login failed. Please check your email and password."
+                    );
+                },
+            });
+        });
+    }
+
+    navigateToRegister() {
+        console.log("LoginComponent: Navigate to Register button clicked");
+        this.router.navigate(["/register"]);
     }
 }
