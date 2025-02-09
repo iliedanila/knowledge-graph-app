@@ -5,7 +5,6 @@ import {
     runInInjectionContext,
 } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { DocumentListComponent } from "./components/document-list/document-list.component";
 import {
     Auth,
     authState,
@@ -18,12 +17,7 @@ import { MatButtonModule } from "@angular/material/button";
 
 @Component({
     selector: "app-root",
-    imports: [
-        RouterOutlet,
-        DocumentListComponent,
-        CommonModule,
-        MatButtonModule,
-    ],
+    imports: [RouterOutlet, CommonModule, MatButtonModule],
     templateUrl: "./app.component.html",
     styleUrl: "./app.component.css",
 })
