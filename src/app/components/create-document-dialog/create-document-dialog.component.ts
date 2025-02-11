@@ -96,10 +96,12 @@ export class CreateDocumentDialogComponent implements OnInit {
 
         runInInjectionContext(this.injector, async () => {
             try {
-                await this.documentService.createDocument(
-                    this.documentTitle,
-                    this.documentContent
-                );
+                const documentData: Omit<Document, "id" | "userId"> = {
+                    title: this.documentTitle,
+                    content: this.documentContent,
+                    createdAt: new Date(),
+                };
+                await this.documentService.createDocument(documentData);
                 console.log(
                     "CreateDocumentDialogComponent: Document created successfully"
                 );

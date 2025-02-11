@@ -3,4 +3,5 @@ export interface Document {
     title: string;
     content: string;
     createdAt: Date;
+    userId: string;
 }

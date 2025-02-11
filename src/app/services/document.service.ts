@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { from, Observable, switchMap, throwError } from "rxjs";
 import { Document } from "../models/document.model";
 import {
     addDoc,
@@ -11,12 +11,14 @@ import {
     setDoc,
     updateDoc,
 } from "@angular/fire/firestore";
+import { Auth, authState } from "@angular/fire/auth";
 
 @Injectable({
     providedIn: "root",
 })
 export class DocumentService {
     private firestore: Firestore = inject(Firestore);
+    private auth: Auth = inject(Auth);
 
     constructor() {
         console.log("DocumentService: Constructor called (Firestore Data)");
@@ -30,26 +32,22 @@ export class DocumentService {
         }) as Observable<Document[]>;
     }
 
-    async createDocument(title: string, content: string) {
-        const documentsCollection = collection(this.firestore, "documents");
-        const docRef = doc(documentsCollection); // Let Firestore auto-generate ID
-        const document: Document = {
-            id: docRef.id, // Get the auto-generated ID
-            title: title,
-            content: content,
-            createdAt: new Date(), // Add createdAt timestamp
-        };
-        try {
-            await setDoc(docRef, document);
-            console.log(
-                "DocumentService: Document created successfully with ID:",
-                document.id
-            );
-            return document.id; // Return the document ID
-        } catch (error) {
-            console.error("DocumentService: Error creating document:", error);
-            throw error; // Re-throw the error for component to handle
+    createDocument(
+        documentData: Omit<Document, "id" | "userId">
+    ): Observable<any> {
+        const user = this.auth.currentUser;
+
+        if (!user) {
+            return throwError(() => new Error("User not logged in"));
         }
+
+        const documentsCollection = collection(this.firestore, "documents");
+        const documentToCreate = {
+            ...documentData,
+            userId: user.uid,
+        };
+
+        return from(addDoc(documentsCollection, documentToCreate));
     }
 
     async updateDocument(
