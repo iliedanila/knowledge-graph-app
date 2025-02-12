@@ -1,5 +1,13 @@
 import { inject, Injectable } from "@angular/core";
-import { from, Observable, switchMap, throwError } from "rxjs";
+import {
+    combineLatest,
+    EMPTY,
+    from,
+    map,
+    Observable,
+    switchMap,
+    throwError,
+} from "rxjs";
 import { Document } from "../models/document.model";
 import {
     addDoc,
@@ -8,8 +16,11 @@ import {
     deleteDoc,
     doc,
     Firestore,
+    getDocs,
+    query,
     setDoc,
     updateDoc,
+    where,
 } from "@angular/fire/firestore";
 import { Auth, authState } from "@angular/fire/auth";
 
@@ -17,23 +28,49 @@ import { Auth, authState } from "@angular/fire/auth";
     providedIn: "root",
 })
 export class DocumentService {
-    private firestore: Firestore = inject(Firestore);
-    private auth: Auth = inject(Auth);
+    constructor(private firestore: Firestore, private auth: Auth) {}
 
-    constructor() {
-        console.log("DocumentService: Constructor called (Firestore Data)");
-    }
+    getUserDocuments(): Observable<any[]> {
+        return authState(this.auth).pipe(
+            switchMap((user) => {
+                if (!user) return EMPTY;
 
-    getDocuments(): Observable<Document[]> {
-        console.log("DocumentService: getDocuments() called (Firestore Data)");
-        const documentsCollection = collection(this.firestore, "documents");
-        return collectionData(documentsCollection, {
-            idField: "id",
-        }) as Observable<Document[]>;
+                const documentsCollection = collection(
+                    this.firestore,
+                    "documents"
+                );
+
+                // Query for documents where the user is the owner
+                const ownerQuery = query(
+                    documentsCollection,
+                    where("owner", "==", user.uid)
+                );
+                const ownerDocs$ = collectionData(ownerQuery, {
+                    idField: "id",
+                });
+
+                // Query for documents where the user is in the sharedWith array
+                const sharedQuery = query(
+                    documentsCollection,
+                    where("sharedWith", "array-contains", user.uid)
+                );
+                const sharedDocs$ = collectionData(sharedQuery, {
+                    idField: "id",
+                });
+
+                // Combine both observables
+                return combineLatest([ownerDocs$, sharedDocs$]).pipe(
+                    map(([ownerDocs, sharedDocs]) => [
+                        ...ownerDocs,
+                        ...sharedDocs,
+                    ])
+                );
+            })
+        );
     }
 
     createDocument(
-        documentData: Omit<Document, "id" | "userId">
+        documentData: Omit<Document, "id" | "owner">
     ): Observable<any> {
         const user = this.auth.currentUser;
 
@@ -42,9 +79,9 @@ export class DocumentService {
         }
 
         const documentsCollection = collection(this.firestore, "documents");
-        const documentToCreate = {
+        const documentToCreate: Omit<Document, "id"> = {
             ...documentData,
-            userId: user.uid,
+            owner: user.uid,
         };
 
         return from(addDoc(documentsCollection, documentToCreate));

@@ -36,7 +36,7 @@ export class DocumentListComponent implements OnInit {
         console.log("DocumentListComponent: ngOnInit called");
         runInInjectionContext(this.injector, () => {
             console.log("DocumentListComponent: Inside runInInjectionContext");
-            this.documents$ = this.documentService.getDocuments();
+            this.documents$ = this.documentService.getUserDocuments();
             console.log(
                 "DocumentListComponent: getDocuments() called inside runInInjectionContext, documents$ Observable:",
                 this.documents$
