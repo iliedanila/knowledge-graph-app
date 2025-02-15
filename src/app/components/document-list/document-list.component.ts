@@ -23,24 +23,17 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentListComponent implements OnInit {
-    private documentService = inject(DocumentService);
-    private injector = inject(Injector);
     documents$!: Observable<Document[]>;
-    private dialog: MatDialog = inject(MatDialog);
 
-    constructor() {
-        console.log("DocumentListComponent: Constructor called");
-    }
+    constructor(
+        private documentService: DocumentService,
+        private injector: Injector,
+        private dialog: MatDialog
+    ) {}
 
     ngOnInit(): void {
-        console.log("DocumentListComponent: ngOnInit called");
         runInInjectionContext(this.injector, () => {
-            console.log("DocumentListComponent: Inside runInInjectionContext");
             this.documents$ = this.documentService.getUserDocuments();
-            console.log(
-                "DocumentListComponent: getDocuments() called inside runInInjectionContext, documents$ Observable:",
-                this.documents$
-            );
         });
     }
 
@@ -49,66 +42,35 @@ export class DocumentListComponent implements OnInit {
     }
 
     createDocument() {
-        console.log("DocumentListComponent: createDocument() button clicked!");
-        console.log(
-            "DocumentListComponent: Opening CreateDocumentDialog using MatDialog"
-        );
         const dialogRef = this.dialog.open(CreateDocumentDialogComponent, {
             width: "400px",
         });
 
-        dialogRef.afterClosed().subscribe((_result) => {
-            console.log("The dialog was closed"); // You can add logic here to handle dialog close event if needed
-        });
+        dialogRef.afterClosed().subscribe((_result) => {});
     }
 
     editDocument(document: Document) {
-        console.log(
-            "DocumentListComponent: editDocument() button clicked for document:",
-            document
-        );
-
-        console.log(
-            "DocumentListComponent: Opening CreateDocumentDialog in EDIT mode using MatDialog for document:",
-            document
-        );
         const dialogRef = this.dialog.open(CreateDocumentDialogComponent, {
             width: "400px",
             data: { documentData: document },
         });
 
-        dialogRef.afterClosed().subscribe((result) => {
-            console.log("The edit dialog was closed");
-        });
+        dialogRef.afterClosed().subscribe((_result) => {});
     }
 
     deleteDocument(document: Document) {
-        console.log(
-            "DocumentListComponent: deleteDocument() button clicked for document:",
-            document
-        );
         const documentId = document.id;
         if (documentId) {
-            console.log(
-                `DocumentListComponent: Calling documentService.deleteDocument() for document ID: ${documentId}`
-            );
             runInInjectionContext(this.injector, async () => {
                 try {
                     await this.documentService.deleteDocument(documentId);
-                    console.log(
-                        `DocumentListComponent: Document with ID ${documentId} deleted successfully`
-                    );
                 } catch (error) {
                     console.error(
-                        `DocumentListComponent: Error deleting document with ID ${documentId}:`,
+                        `Error deleting document with ID ${documentId}:`,
                         error
                     );
                 }
             });
-        } else {
-            console.error(
-                "DocumentListComponent: Error: document.id is missing. Cannot delete document."
-            );
         }
     }
 }
