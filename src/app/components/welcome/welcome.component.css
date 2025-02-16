@@ -1,25 +1,31 @@
-:host {
+.welcome-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 0 10%;
+}
+
+.welcome-text {
+    flex: 1;
+    text-align: left;
+}
+
+.login-form {
+    flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh; /* Make Welcome component take full viewport height */
 }
 
-mat-card {
-    width: 500px; /* Adjust card width as needed */
-    max-width: 90%; /* Responsive width for smaller screens */
-}
+@media (max-width: 768px) {
+    .welcome-container {
+        flex-direction: column;
+        padding: 0 5%;
+    }
 
-mat-card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; /* Make content stretch to card width */
-}
-
-app-login {
-    margin-bottom: 20px; /* Add space below embedded login form */
-}
-
-button {
-    margin: 0 5px; /* Add horizontal spacing between buttons */
+    .welcome-text,
+    .login-form {
+        width: 100%;
+        text-align: center;
+    }
 }
