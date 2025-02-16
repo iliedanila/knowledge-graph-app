@@ -1,0 +1,17 @@
+.documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.document-card {
+    max-width: 400px; /* Prevents cards from becoming too wide */
+    padding: 16px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.document-card:hover {
+    transform: scale(1.02);
+}

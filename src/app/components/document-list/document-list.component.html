@@ -1,21 +1,58 @@
-<div>
+<div class="document-list">
     <h2>Knowledge Graph Documents</h2>
 
     <button mat-raised-button color="primary" (click)="createDocument()">
         Create New Document
     </button>
 
-    <ul *ngIf="documents$ | async as documents; else loading">
-        <li *ngFor="let document of documents; trackBy: trackByDocumentId">
-            {{ document.title }} (ID: {{ document.id }})
-            <button mat-button color="accent" (click)="editDocument(document)">
-                Edit
-            </button>
-            <button mat-button color="warn" (click)="deleteDocument(document)">
-                Delete
-            </button>
-        </li>
-    </ul>
+    <div
+        class="documents-grid"
+        *ngIf="documents$ | async as documents; else loading"
+    >
+        <mat-card
+            *ngFor="let document of documents; trackBy: trackByDocumentId"
+            class="document-card"
+        >
+            <mat-card-header>
+                <mat-card-title>{{ document.title }}</mat-card-title>
+                <mat-card-subtitle>
+                    {{
+                        document.createdAt
+                            ? (document.createdAt | date : "medium")
+                            : "No date available"
+                    }}
+                </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+                <p>
+                    {{
+                        document.content
+                            ? document.content.length > 100
+                                ? (document.content | slice : 0 : 100) + "..."
+                                : document.content
+                            : "No content available"
+                    }}
+                </p>
+            </mat-card-content>
+            <mat-card-actions>
+                <button
+                    mat-button
+                    color="accent"
+                    (click)="editDocument(document)"
+                >
+                    Edit
+                </button>
+                <button
+                    mat-button
+                    color="warn"
+                    (click)="deleteDocument(document)"
+                >
+                    Delete
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
     <ng-template #loading>
         <p>Loading documents...</p>
     </ng-template>

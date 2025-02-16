@@ -8,18 +8,36 @@ import {
     runInInjectionContext,
 } from "@angular/core";
 import { DocumentService } from "../../services/document.service";
-import { Observable } from "rxjs";
+import { map, Observable } from "rxjs";
 import { Document } from "../../models/document.model";
 import { CreateDocumentDialogComponent } from "../create-document-dialog/create-document-dialog.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import {
+    MatCard,
+    MatCardActions,
+    MatCardContent,
+    MatCardHeader,
+    MatCardSubtitle,
+    MatCardTitle,
+} from "@angular/material/card";
 
 @Component({
     selector: "app-document-list",
     standalone: true,
-    imports: [CommonModule, MatButtonModule, MatDialogModule],
+    imports: [
+        CommonModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatCard,
+        MatCardHeader,
+        MatCardTitle,
+        MatCardSubtitle,
+        MatCardContent,
+        MatCardActions,
+    ],
     templateUrl: "./document-list.component.html",
-    styles: ``,
+    styleUrl: "./document-list.component.css",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DocumentListComponent implements OnInit {
@@ -33,7 +51,16 @@ export class DocumentListComponent implements OnInit {
 
     ngOnInit(): void {
         runInInjectionContext(this.injector, () => {
-            this.documents$ = this.documentService.getUserDocuments();
+            this.documents$ = this.documentService.getUserDocuments().pipe(
+                map((documents) =>
+                    documents.map((doc) => ({
+                        ...doc,
+                        createdAt: doc.createdAt?.seconds
+                            ? new Date(doc.createdAt.seconds * 1000)
+                            : null, // Convert Firestore Timestamp to JavaScript Date
+                    }))
+                )
+            );
         });
     }
 
