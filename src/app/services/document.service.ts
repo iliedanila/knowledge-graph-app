@@ -1,4 +1,9 @@
-import { inject, Injectable } from "@angular/core";
+import {
+    inject,
+    Injectable,
+    Injector,
+    runInInjectionContext,
+} from "@angular/core";
 import {
     combineLatest,
     EMPTY,
@@ -28,43 +33,49 @@ import { Auth, authState } from "@angular/fire/auth";
     providedIn: "root",
 })
 export class DocumentService {
-    constructor(private firestore: Firestore, private auth: Auth) {}
+    constructor(
+        private firestore: Firestore,
+        private auth: Auth,
+        private injector: Injector
+    ) {}
 
     getUserDocuments(): Observable<any[]> {
         return authState(this.auth).pipe(
             switchMap((user) => {
                 if (!user) return EMPTY;
 
-                const documentsCollection = collection(
-                    this.firestore,
-                    "documents"
-                );
+                return runInInjectionContext(this.injector, () => {
+                    const documentsCollection = collection(
+                        this.firestore,
+                        "documents"
+                    );
 
-                // Query for documents where the user is the owner
-                const ownerQuery = query(
-                    documentsCollection,
-                    where("owner", "==", user.uid)
-                );
-                const ownerDocs$ = collectionData(ownerQuery, {
-                    idField: "id",
+                    // Query for documents where the user is the owner
+                    const ownerQuery = query(
+                        documentsCollection,
+                        where("owner", "==", user.uid)
+                    );
+                    const ownerDocs$ = collectionData(ownerQuery, {
+                        idField: "id",
+                    });
+
+                    // Query for documents where the user is in the sharedWith array
+                    const sharedQuery = query(
+                        documentsCollection,
+                        where("sharedWith", "array-contains", user.uid)
+                    );
+                    const sharedDocs$ = collectionData(sharedQuery, {
+                        idField: "id",
+                    });
+
+                    // Combine both observables
+                    return combineLatest([ownerDocs$, sharedDocs$]).pipe(
+                        map(([ownerDocs, sharedDocs]) => [
+                            ...ownerDocs,
+                            ...sharedDocs,
+                        ])
+                    );
                 });
-
-                // Query for documents where the user is in the sharedWith array
-                const sharedQuery = query(
-                    documentsCollection,
-                    where("sharedWith", "array-contains", user.uid)
-                );
-                const sharedDocs$ = collectionData(sharedQuery, {
-                    idField: "id",
-                });
-
-                // Combine both observables
-                return combineLatest([ownerDocs$, sharedDocs$]).pipe(
-                    map(([ownerDocs, sharedDocs]) => [
-                        ...ownerDocs,
-                        ...sharedDocs,
-                    ])
-                );
             })
         );
     }
