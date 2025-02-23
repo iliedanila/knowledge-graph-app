@@ -21,6 +21,7 @@ import {
     MatCardSubtitle,
     MatCardTitle,
 } from "@angular/material/card";
+import { Router } from "@angular/router";
 
 @Component({
     selector: "app-document-list",
@@ -46,7 +47,8 @@ export class DocumentListComponent implements OnInit {
     constructor(
         private documentService: DocumentService,
         private injector: Injector,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private router: Router
     ) {}
 
     ngOnInit(): void {
@@ -99,5 +101,9 @@ export class DocumentListComponent implements OnInit {
                 }
             });
         }
+    }
+
+    navigateToDocument(documentId: string) {
+        this.router.navigate(["/document", documentId]);
     }
 }

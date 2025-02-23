@@ -1,0 +1,25 @@
+<div class="document-edit-container">
+    <h2>Edit Document</h2>
+
+    <form [formGroup]="documentForm" (ngSubmit)="saveDocument()">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" required />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Content</mat-label>
+            <textarea matInput rows="6" formControlName="content"></textarea>
+        </mat-form-field>
+
+        <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!documentForm || documentForm.invalid"
+        >
+            Save Changes
+        </button>
+        <button mat-button color="warn" (click)="cancelEdit()">Cancel</button>
+    </form>
+</div>

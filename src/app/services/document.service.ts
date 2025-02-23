@@ -1,9 +1,4 @@
-import {
-    inject,
-    Injectable,
-    Injector,
-    runInInjectionContext,
-} from "@angular/core";
+import { Injectable, Injector, runInInjectionContext } from "@angular/core";
 import {
     combineLatest,
     EMPTY,
@@ -21,9 +16,8 @@ import {
     deleteDoc,
     doc,
     Firestore,
-    getDocs,
+    getDoc,
     query,
-    setDoc,
     updateDoc,
     where,
 } from "@angular/fire/firestore";
@@ -78,6 +72,19 @@ export class DocumentService {
                 });
             })
         );
+    }
+
+    getDocumentById(documentId: string) {
+        return runInInjectionContext(this.injector, () => {
+            const docRef = doc(this.firestore, "documents", documentId);
+            return from(getDoc(docRef)).pipe(
+                map((docSnap) =>
+                    docSnap.exists()
+                        ? ({ id: docSnap.id, ...docSnap.data() } as Document)
+                        : null
+                )
+            );
+        });
     }
 
     createDocument(

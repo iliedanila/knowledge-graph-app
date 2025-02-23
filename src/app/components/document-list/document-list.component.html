@@ -12,6 +12,7 @@
         <mat-card
             *ngFor="let document of documents; trackBy: trackByDocumentId"
             class="document-card"
+            (click)="navigateToDocument(document.id)"
         >
             <mat-card-header>
                 <mat-card-title>{{ document.title }}</mat-card-title>
@@ -26,26 +27,17 @@
             <mat-card-content>
                 <p>
                     {{
-                        document.content
-                            ? document.content.length > 100
-                                ? (document.content | slice : 0 : 100) + "..."
-                                : document.content
-                            : "No content available"
+                        document.content && document.content.length > 100
+                            ? (document.content | slice : 0 : 100) + "..."
+                            : document.content || "No content available"
                     }}
                 </p>
             </mat-card-content>
             <mat-card-actions>
                 <button
                     mat-button
-                    color="accent"
-                    (click)="editDocument(document)"
-                >
-                    Edit
-                </button>
-                <button
-                    mat-button
                     color="warn"
-                    (click)="deleteDocument(document)"
+                    (click)="deleteDocument(document); $event.stopPropagation()"
                 >
                     Delete
                 </button>
